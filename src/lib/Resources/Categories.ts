@@ -1,6 +1,6 @@
-import { DeleteObjectIDs, WithCursor } from 'src/typings';
-import Resource from '../lib/Resource';
-import { Category, GetQueryParams } from '../typings/Resources/Category';
+import { DeleteObjectIDs, WithCursor } from '../../typings';
+import Resource from '../Resource';
+import { Category, GetQueryParams } from '../../typings/Resources/Category';
 
 export default class Categories extends Resource {
   baseURL = '/categories';

@@ -1,9 +1,9 @@
 import fs from 'fs';
 import stream from 'stream';
 import { promisify } from 'util';
-import { Item, GetQueryParams } from '../typings/Resources/Item';
-import Resource from '../lib/Resource';
-import { DeleteObjectIDs, WithCursor } from '../typings';
+import { Item, GetQueryParams } from '../../typings/Resources/Item';
+import Resource from '../Resource';
+import { DeleteObjectIDs, WithCursor } from '../../typings';
 
 export default class Items extends Resource {
   baseURL = '/items';

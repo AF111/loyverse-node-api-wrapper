@@ -1,6 +1,6 @@
-import { WithCursor } from '../typings';
-import Resource from '../lib/Resource';
-import { Store, GetQueryParams } from '../typings/Resources/Store';
+import { WithCursor } from '../../typings';
+import Resource from '../Resource';
+import { Store, GetQueryParams } from '../../typings/Resources/Store';
 
 export default class Stores extends Resource {
   baseURL = '/stores';

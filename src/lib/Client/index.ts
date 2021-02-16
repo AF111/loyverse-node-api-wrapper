@@ -7,10 +7,10 @@ import { AuthMethod } from '../Auth/BaseAuth';
 import { HTTPClient } from '../../typings';
 import { ResourceConstructor } from '../Resource';
 
-import Items from '../../Resources/Items';
-import Stores from '../../Resources/Stores';
-import Categories from '../../Resources/Categories';
-import Inventory from '../../Resources/Inventory';
+import Items from '../Resources/Items';
+import Stores from '../Resources/Stores';
+import Categories from '../Resources/Categories';
+import Inventory from '../Resources/Inventory';
 
 export interface IClientResource {
   auth: IOAuth2 | IPersonalAccessTokenAuth;

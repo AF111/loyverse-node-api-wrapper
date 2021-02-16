@@ -1,7 +1,7 @@
-import { WithCursor } from '../typings';
-import { InventoryLevel, UpdateInventoryLevel, GetQueryParams } from '../typings/Resources/Inventory';
-import Resource from '../lib/Resource';
-import { Store } from '../typings/Resources/Store';
+import { WithCursor } from '../../typings';
+import { InventoryLevel, UpdateInventoryLevel, GetQueryParams } from '../../typings/Resources/Inventory';
+import Resource from '../Resource';
+import { Store } from '../../typings/Resources/Store';
 
 export default class Inventory extends Resource {
   baseURL = '/inventory';
