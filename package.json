@@ -10,7 +10,10 @@
   "scripts": {
     "build": "tsc",
     "watch": "tsc --watch",
-    "publish": "npm run test && npm run build && npm publish",
+    "version": "git add -A",
+    "prepare": "npm run build",
+    "prepublish": "npm run test && npm run build",
+    "postversion": "git push && git push --tags",
     "test": "jest"
   },
   "keywords": [
