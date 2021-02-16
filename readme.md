@@ -26,6 +26,12 @@ The API resources are also not testsed.
 | Webhooks      | ❌           | ❌    |
 | Variants      | ❌           | ❌    |
 
+# Install
+
+```bash
+npm install loyverse-api-wrapper
+```
+
 # Authentication/Authorization
 
 Loyverse supports two Authorization methods.
