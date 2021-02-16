@@ -1,0 +1,170 @@
+<html>
+	<head>
+		<title>OAuth example</title>
+
+		<style>
+			* {
+				box-sizing: border-box;
+			}
+
+			.form-group {
+				padding: 6px;
+			}
+
+			.form-group input {
+				padding: 5px;
+				width: 300px;
+			}
+
+			.container {
+				max-width: 600px;
+				margin: 0 auto;
+			}
+
+			.scope {
+				max-width: 250px;
+				text-align: left;
+				margin: 0 auto;
+			}
+
+			.form-group .scope input {
+				display: inline;
+				width: 30px;
+			}
+
+			button {
+				font-weight: bold;
+				text-transform: uppercase;
+				padding: 10px 40px;
+				margin: 10px;
+				background: #35c4e4;
+				color: #ffff;
+				border: 0;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="container" style="text-align: center">
+			<h1>Loyverse API Demo</h1>
+			<% if (isAuthenticated) { %>
+			<a href="/auth/logout">Logout</a>
+			<pre id="token" style="display: none; text-align: initial"></pre>
+			<button id="btn">Show Token</button>
+			<a href="/api/items" target="_blank">Get Items</a>
+			<a href="/api/stores" target="_blank">Get Stores</a>
+			<script type="text/javascript">
+				var btn = document.getElementById('btn');
+				var token = document.getElementById('token');
+
+				<% if (accessToken) { %>
+					token.textContent = atob("<%= accessToken %>");
+				<% } %>
+
+				btn.addEventListener(
+					'click',
+					function () {
+						var el = document.getElementById('token');
+						var v = el.style.display;
+						el.style.display = v === 'none' ? 'block' : 'none';
+						btn.textContent = v === 'none' ? 'Hide token' : 'Show Token';
+					},
+					true
+				);
+			</script>
+
+			<% } else { %>
+			<form id="credentials-form">
+				<div class="form-group">
+					<label>Client ID</label>
+					<input type="text" name="clientID" value="<%= credentials.clientID %>" placeholder="Client ID" required />
+				</div>
+
+				<div class="form-group">
+					<label>Client Secret</label>
+					<input
+						type="password"
+						name="clientSecret"
+						value="<%= credentials.clientSecret %>"
+						placeholder="Client Secret"
+						required
+					/>
+				</div>
+
+				<div class="form-group">
+					<label>Redirect URL</label>
+					<input
+						type="text"
+						name="redirectURL"
+						value="<%= credentials.redirectURL %>"
+						placeholder="Client ID"
+						required
+					/>
+				</div>
+
+				<div class="form-group">
+					<label>Scopes</label>
+					<div>
+						<% scopes.forEach(function (scope) { %>
+						<div class="scope">
+							<input type="checkbox" value="<%= scope %>" name="scope" />
+							<span><%= scope %></span>
+						</div>
+						<% }); %>
+					</div>
+				</div>
+
+				<button type="submit">Authenticate</button>
+			</form>
+			<!-- target="_blank" rel="noreferrer noopener" -->
+			<script type="text/javascript">
+				document.getElementById('credentials-form').addEventListener('submit', function (ev) {
+					var formData = new FormData(ev.target);
+					ev.preventDefault();
+
+					var values = {};
+
+					formData.forEach((v, k) => {
+						values[k] = formData.get(k);
+					});
+
+					values.scope = formData.getAll('scope');
+
+					if (!values.scope.length) {
+						alert('Please select atleast one scope!');
+						return;
+					}
+
+
+					fetch('/auth/login', {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json',
+						},
+						body: JSON.stringify(values),
+						credentials: 'same-origin',
+					})
+						.then((res) => {
+							if (res.status !== 200) {
+								alert(res.statusText || 'Something went wrong');
+								return null;
+							}
+
+							return res.json();
+						})
+						.then(({ data }) => {
+							if (data) {
+								console.log(data);
+								location.href = data.redirectTo;
+							}
+						})
+						.catch((err) => {
+							console.error(err);
+							alert(err.messsage || 'Something went wrong');
+						});
+				});
+			</script>
+			<% } %>
+		</div>
+	</body>
+</html>
