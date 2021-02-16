@@ -13,7 +13,7 @@
     "version": "git add -A",
     "prepare": "npm run build",
     "prepublish": "npm run test && npm run build",
-    "postversion": "git push && git push --tags",
+    "postversion": "git push origin main && git push origin main --tags",
     "test": "jest"
   },
   "keywords": [
