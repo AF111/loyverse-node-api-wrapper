@@ -56,6 +56,12 @@ The client will automatically refresh the access token when it expires.
 
 # Examples
 
+### ES6 import syntax
+
+```js
+import { PersonalAccessTokenAuth, Client } from 'loyverse-api-wrapper';
+```
+
 ### Authentication using Personal Access Tokens
 
 Example explicitly instantiating the PersonalAccessTokenAuth Provider.
