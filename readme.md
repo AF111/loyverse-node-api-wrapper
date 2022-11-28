@@ -1,5 +1,7 @@
 # Loyverse Node.js API Wrapper
 
+# Deprecated: Package no longer supported.
+
 🚧🚧🚧 **WARNING: Work in progress (WIP)** 🚧🚧🚧
 
 This is still WIP and not many of the API features are implemented yet.
