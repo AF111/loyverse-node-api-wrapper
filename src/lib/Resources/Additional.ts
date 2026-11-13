@@ -4,12 +4,12 @@ import { WithCursor, DeleteObjectIDs } from '../../typings';
 type Query = Record<string, string | number | boolean | string[] | undefined>;
 type Entity = Record<string, any>;
 class CollectionResource extends Resource {
-  protected async list<T, K extends string>(path: string, key: K, opts?: Query): Promise<WithCursor<Record<K, T[]>>> {
+  protected async list<K extends string>(path: string, key: K, opts?: Query): Promise<WithCursor<Record<K, Entity[]>>> {
     const query = { ...(opts ?? {}) };
     Object.keys(query).forEach((name) => {
       if (Array.isArray(query[name])) query[name] = (query[name] as string[]).join(',');
     });
-    const response = await this.httpClient.get<WithCursor<Record<K, T[]>>>(this.params(path ? this.getURL(path) : this.getURL(), query));
+    const response = await this.httpClient.get<WithCursor<Record<K, Entity[]>>>(this.params(path ? this.getURL(path) : this.getURL(), query));
     return response.body;
   }
   protected async get<T>(path: string, id: string): Promise<T> {
@@ -28,7 +28,7 @@ class CollectionResource extends Resource {
 
 export class Customers extends CollectionResource {
   baseURL = '/customers';
-  getCustomers(opts?: Query) { return this.list<Entity>('', 'customers', opts); }
+  getCustomers(opts?: Query) { return this.list('', 'customers', opts); }
   getCustomer(id: string) { return this.get<Entity>('', id); }
   createCustomer(customer: Entity) { return this.save<Entity>('', customer); }
 }
