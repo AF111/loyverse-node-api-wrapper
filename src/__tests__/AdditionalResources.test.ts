@@ -1,4 +1,5 @@
-import { Customers, Receipts } from '../lib/Resources/Additional';
+import Customers from '../lib/Resources/Customers';
+import Receipts from '../lib/Resources/Receipts';
 
 describe('additional resources', () => {
   const http: any = {
