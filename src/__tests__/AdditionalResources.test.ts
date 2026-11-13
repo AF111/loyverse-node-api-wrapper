@@ -12,11 +12,11 @@ describe('additional resources', () => {
     const resource = new Customers({ _httpClient: http, auth: {} } as any);
     await resource.getCustomers(options);
     expect(options.customer_ids).toBe(ids);
-    expect(http.get).toHaveBeenCalledWith('/customers?customer_ids=a%2Cb');
+    expect(http.get).toHaveBeenCalledWith('customers?customer_ids=a%2Cb');
   });
   test('refund posts to the receipt refund endpoint', async () => {
     const resource = new Receipts({ _httpClient: http, auth: {} } as any);
     await resource.refundReceipt('R-1', { store_id: 'S-1' });
-    expect(http.post).toHaveBeenCalledWith('/receipts/R-1/refund', { json: { store_id: 'S-1' } });
+    expect(http.post).toHaveBeenCalledWith('receipts/R-1/refund', { json: { store_id: 'S-1' } });
   });
 });
