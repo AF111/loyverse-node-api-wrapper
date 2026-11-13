@@ -9,11 +9,11 @@ class CollectionResource extends Resource {
     Object.keys(query).forEach((name) => {
       if (Array.isArray(query[name])) query[name] = (query[name] as string[]).join(',');
     });
-    const response = await this.httpClient.get<WithCursor<Record<string, T[]>>>(this.params(this.getURL(path), query));
+    const response = await this.httpClient.get<WithCursor<Record<string, T[]>>>(this.params(path ? this.getURL(path) : this.getURL(), query));
     return response.body;
   }
   protected async get<T>(path: string, id: string): Promise<T> {
-    const response = await this.httpClient.get<T>(this.getURL(path, encodeURIComponent(id)));
+    const response = await this.httpClient.get<T>((path ? this.getURL(path, encodeURIComponent(id)) : this.getURL(encodeURIComponent(id))));
     return response.body;
   }
   protected async save<T>(path: string, value: Entity): Promise<T> {
@@ -21,7 +21,7 @@ class CollectionResource extends Resource {
     return response.body;
   }
   protected async remove(path: string, id: string): Promise<DeleteObjectIDs> {
-    const response = await this.httpClient.delete<DeleteObjectIDs>(this.getURL(path, encodeURIComponent(id)));
+    const response = await this.httpClient.delete<DeleteObjectIDs>((path ? this.getURL(path, encodeURIComponent(id)) : this.getURL(encodeURIComponent(id))));
     return response.body;
   }
 }
@@ -45,7 +45,7 @@ export class Employees extends CollectionResource {
 }
 export class Merchant extends CollectionResource {
   baseURL = '/merchant';
-  getMerchant() { return this.getURL('') && this.httpClient.get<Entity>(this.getURL('')).then((r) => r.body); }
+  getMerchant() { return this.httpClient.get<Entity>(this.getURL()).then((r) => r.body); }
 }
 export class Modifiers extends CollectionResource {
   baseURL = '/modifiers';
