@@ -10,7 +10,7 @@ describe('variant resource', () => {
   test('creates and deletes variants', async () => {
     await resource.createVariant({ item_id: 'i-1' });
     await resource.deleteVariant('v/1');
-    expect(http.post).toHaveBeenCalledWith('/variants', { json: { item_id: 'i-1' } });
-    expect(http.delete).toHaveBeenCalledWith('/variants/v%2F1');
+    expect(http.post).toHaveBeenCalledWith('variants', { json: { item_id: 'i-1' } });
+    expect(http.delete).toHaveBeenCalledWith('variants/v%2F1');
   });
 });
