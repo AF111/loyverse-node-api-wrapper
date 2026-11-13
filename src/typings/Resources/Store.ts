@@ -14,7 +14,7 @@ export type Store = {
   deleted_at: string;
 };
 
-export type GetQueryParams = Omit<PaginationParams, 'limit' | 'cursor'> & {
+export type GetQueryParams = Pick<PaginationParams, 'limit' | 'cursor' | 'show_deleted'> & {
   /**
    * @description comma-separated list of IDs
    */
