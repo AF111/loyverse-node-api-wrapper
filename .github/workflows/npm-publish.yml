@@ -19,7 +19,7 @@ jobs:
         with:
           node-version: 22
           registry-url: https://registry.npmjs.org
-      - run: npm install
+      - run: npm install --no-audit --no-fund --legacy-peer-deps
       - run: npm test -- --runInBand
       - run: npm run build
       - run: npm publish --access public --provenance
