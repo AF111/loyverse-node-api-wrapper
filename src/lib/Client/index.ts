@@ -12,7 +12,18 @@ import Stores from '../Resources/Stores';
 import Categories from '../Resources/Categories';
 import Inventory from '../Resources/Inventory';
 import Variants from '../Resources/Variants';
-import { Customers, Discounts, Employees, Merchant, Modifiers, PaymentTypes, POSDevices, Receipts, Shifts, Suppliers, Taxes, Webhooks } from '../Resources/Additional';
+import Customers from '../Resources/Customers';
+import Discounts from '../Resources/Discounts';
+import Employees from '../Resources/Employees';
+import Merchant from '../Resources/Merchant';
+import Modifiers from '../Resources/Modifiers';
+import PaymentTypes from '../Resources/PaymentTypes';
+import POSDevices from '../Resources/POSDevices';
+import Receipts from '../Resources/Receipts';
+import Shifts from '../Resources/Shifts';
+import Suppliers from '../Resources/Suppliers';
+import Taxes from '../Resources/Taxes';
+import Webhooks from '../Resources/Webhooks';
 
 export interface IClientResource {
   auth: IOAuth2 | IPersonalAccessTokenAuth;
