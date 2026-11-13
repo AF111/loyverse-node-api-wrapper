@@ -1,0 +1,27 @@
+name: Publish to npm (manual)
+on:
+  workflow_dispatch:
+    inputs:
+      confirm_publish:
+        description: 'Type PUBLISH to enable this one-off publication'
+        required: true
+        type: string
+permissions:
+  contents: read
+  id-token: write
+jobs:
+  publish:
+    if: ${{ inputs.confirm_publish == 'PUBLISH' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+      - run: npm ci
+      - run: npm test -- --runInBand
+      - run: npm run build
+      - run: npm publish --access public --provenance
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
