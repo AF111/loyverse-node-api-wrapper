@@ -18,5 +18,5 @@ export type GetQueryParams = Omit<PaginationParams, 'limit' | 'cursor'> & {
   /**
    * @description comma-separated list of IDs
    */
-  store_ids: string[];
+  store_ids?: string[];
 };

@@ -14,7 +14,7 @@ export default class Items extends Resource {
    * @param itemID
    */
   async getItem(itemID: string) {
-    const res = await this.httpClient.get<Item>(this.getURL(itemID));
+    const res = await this.httpClient.get<Item>(this.getURL(encodeURIComponent(itemID)));
     return res.body;
   }
 
@@ -57,7 +57,7 @@ export default class Items extends Resource {
 
   /**
    * @description Upload Item Image
-   * @see https://developer.loyverse.com/docs/#tag/Items/paths/~1items~1{item_id}~1image/post
+   * @see https://developer.loyverse.com/docs/#tag/Items/paths/~1items~1{item_id}~1image/get
    * @param itemID
    * @param imagePathOrStream absolute path to the image or a readable file stream
    */
@@ -75,7 +75,7 @@ export default class Items extends Resource {
     // For POST, PUT, PATCH, and DELETE methods, `got.stream` returns a `stream.Writable`.
     await pipeline(
       readStream,
-      this.httpClient.stream.post(this.getURL(itemID, 'image'), { headers: { 'Content-Type': 'image/png' } }),
+      this.httpClient.stream.post(this.getURL(encodeURIComponent(itemID), 'image'), { headers: { 'Content-Type': 'image/png' } }),
     );
   }
 

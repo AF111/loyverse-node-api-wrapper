@@ -10,8 +10,8 @@ export default class Stores extends Resource {
    * @see https://developer.loyverse.com/docs/#tag/Stores/paths/~1stores~1{store_id}/get
    * @param {string} storeID
    */
-  async getStore(storeID: number) {
-    const res = await this.httpClient.get<Store>(this.getURL(storeID));
+  async getStore(storeID: string | number) {
+    const res = await this.httpClient.get<Store>(this.getURL(encodeURIComponent(String(storeID))));
     return res.body;
   }
 

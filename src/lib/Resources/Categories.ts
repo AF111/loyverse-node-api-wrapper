@@ -10,8 +10,8 @@ export default class Categories extends Resource {
    * @see https://developer.loyverse.com/docs/#tag/Categories/paths/~1categories~1{category_id}/get
    * @param {string} categoryID
    */
-  async getCategory(categoryID: number) {
-    const res = await this.httpClient.get<Category>(this.getURL(categoryID));
+  async getCategory(categoryID: string | number) {
+    const res = await this.httpClient.get<Category>(this.getURL(encodeURIComponent(String(categoryID))));
     return res.body;
   }
 

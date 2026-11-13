@@ -1,7 +1,6 @@
 import { WithCursor } from '../../typings';
 import { InventoryLevel, UpdateInventoryLevel, GetQueryParams } from '../../typings/Resources/Inventory';
 import Resource from '../Resource';
-import { Store } from '../../typings/Resources/Store';
 
 export default class Inventory extends Resource {
   baseURL = '/inventory';
@@ -33,8 +32,8 @@ export default class Inventory extends Resource {
    * @param {InventoryLevel} inventoryLevels
    */
   async updateInventoryLevels(inventoryLevels: UpdateInventoryLevel[]) {
-    const res = await this.httpClient.post<{ inventory_levels: Store[] }>(this.getURL(), {
-      json: inventoryLevels,
+    const res = await this.httpClient.post<{ inventory_levels: InventoryLevel[] }>(this.getURL(), {
+      json: { inventory_levels: inventoryLevels },
     });
     return res.body;
   }

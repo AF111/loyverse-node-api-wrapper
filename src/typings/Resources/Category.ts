@@ -13,5 +13,5 @@ export type GetQueryParams = Pick<PaginationParams, 'limit' | 'cursor' | 'show_d
   /**
    * @description comma-separated list of IDs
    */
-  categories_ids: string[];
+  categories_ids?: string[];
 };

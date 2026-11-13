@@ -28,6 +28,7 @@ export type Item = {
   id: string;
   handle: string;
   item_name: string;
+  description?: string;
   reference_id: string;
   category_id: string | null;
   track_stock: boolean;
