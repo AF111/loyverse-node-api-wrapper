@@ -11,6 +11,8 @@ import Items from '../Resources/Items';
 import Stores from '../Resources/Stores';
 import Categories from '../Resources/Categories';
 import Inventory from '../Resources/Inventory';
+import Variants from '../Resources/Variants';
+import { Customers, Discounts, Employees, Merchant, Modifiers, PaymentTypes, POSDevices, Receipts, Shifts, Suppliers, Taxes, Webhooks } from '../Resources/Additional';
 
 export interface IClientResource {
   auth: IOAuth2 | IPersonalAccessTokenAuth;
@@ -120,6 +122,9 @@ export class Client<T extends Authenticators> {
     init(Stores);
     init(Inventory);
     init(Categories);
+    init(Variants);
+    init(Customers); init(Discounts); init(Employees); init(Merchant); init(Modifiers);
+    init(PaymentTypes); init(POSDevices); init(Receipts); init(Shifts); init(Suppliers); init(Taxes); init(Webhooks);
   }
 
   #initResource = (R: ResourceConstructor) => {
@@ -137,4 +142,17 @@ export class Client<T extends Authenticators> {
   stores: Stores;
   inventory: Inventory;
   categories: Categories;
+  variants: Variants;
+  customers: Customers;
+  discounts: Discounts;
+  employees: Employees;
+  merchant: Merchant;
+  modifiers: Modifiers;
+  paymenttypes: PaymentTypes;
+  posdevices: POSDevices;
+  receipts: Receipts;
+  shifts: Shifts;
+  suppliers: Suppliers;
+  taxes: Taxes;
+  webhooks: Webhooks;
 }
