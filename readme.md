@@ -84,7 +84,7 @@ The client exposes the following resource groups:
 | Shifts | List, get |
 | Suppliers | List, get, create/update, delete |
 | Taxes | List, get, create/update, delete |
-| Webhooks | List, get, create/update, delete |
+| Webhooks | List, get, create |
 
 Some Loyverse endpoints are read-only or expose only the operations supported by the official API. Check the linked API reference for required scopes, payload schemas and endpoint constraints.
 
@@ -121,7 +121,7 @@ try {
 ## Development
 
 ```bash
-npm ci
+npm install
 npm test -- --runInBand
 npm run build
 ```
