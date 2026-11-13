@@ -1,5 +1,8 @@
 import CollectionResource, { ResourceEntity } from './CollectionResource';
 export default class Merchant extends CollectionResource {
   baseURL = '/merchant';
-  getMerchant() { return this.get<ResourceEntity>(''); }
+  async getMerchant() {
+    const response = await this.httpClient.get<ResourceEntity>(this.getURL());
+    return response.body;
+  }
 }
