@@ -35,14 +35,14 @@ export class Customers extends CollectionResource {
 }
 export class Discounts extends CollectionResource {
   baseURL = '/discounts';
-  getDiscounts(opts?: Query) { return this.list<Entity>('', 'discounts', opts); }
+  getDiscounts(opts?: Query) { return this.list('', 'discounts', opts); }
   getDiscount(id: string) { return this.get<Entity>('', id); }
   createDiscount(discount: Entity) { return this.save<Entity>('', discount); }
   deleteDiscount(id: string) { return this.remove('', id); }
 }
 export class Employees extends CollectionResource {
   baseURL = '/employees';
-  getEmployees(opts?: Query) { return this.list<Entity>('', 'employees', opts); }
+  getEmployees(opts?: Query) { return this.list('', 'employees', opts); }
   getEmployee(id: string) { return this.get<Entity>('', id); }
 }
 export class Merchant extends CollectionResource {
@@ -51,26 +51,26 @@ export class Merchant extends CollectionResource {
 }
 export class Modifiers extends CollectionResource {
   baseURL = '/modifiers';
-  getModifiers(opts?: Query) { return this.list<Entity>('', 'modifiers', opts); }
+  getModifiers(opts?: Query) { return this.list('', 'modifiers', opts); }
   getModifier(id: string) { return this.get<Entity>('', id); }
   createModifier(modifier: Entity) { return this.save<Entity>('', modifier); }
   deleteModifier(id: string) { return this.remove('', id); }
 }
 export class PaymentTypes extends CollectionResource {
   baseURL = '/payment_types';
-  getPaymentTypes(opts?: Query) { return this.list<Entity>('', 'payment_types', opts); }
+  getPaymentTypes(opts?: Query) { return this.list('', 'payment_types', opts); }
   getPaymentType(id: string) { return this.get<Entity>('', id); }
 }
 export class POSDevices extends CollectionResource {
   baseURL = '/pos_devices';
-  getPOSDevices(opts?: Query) { return this.list<Entity>('', 'pos_devices', opts); }
+  getPOSDevices(opts?: Query) { return this.list('', 'pos_devices', opts); }
   getPOSDevice(id: string) { return this.get<Entity>('', id); }
   updatePOSDevice(device: Entity) { return this.save<Entity>('', device); }
   deletePOSDevice(id: string) { return this.remove('', id); }
 }
 export class Receipts extends CollectionResource {
   baseURL = '/receipts';
-  getReceipts(opts?: Query) { return this.list<Entity>('', 'receipts', opts); }
+  getReceipts(opts?: Query) { return this.list('', 'receipts', opts); }
   getReceipt(receiptNumber: string) { return this.get<Entity>('', receiptNumber); }
   createReceipt(receipt: Entity) { return this.save<Entity>('', receipt); }
   async refundReceipt(receiptNumber: string, refund: Entity) {
@@ -80,26 +80,26 @@ export class Receipts extends CollectionResource {
 }
 export class Shifts extends CollectionResource {
   baseURL = '/shifts';
-  getShifts(opts?: Query) { return this.list<Entity>('', 'shifts', opts); }
+  getShifts(opts?: Query) { return this.list('', 'shifts', opts); }
   getShift(id: string) { return this.get<Entity>('', id); }
 }
 export class Suppliers extends CollectionResource {
   baseURL = '/suppliers';
-  getSuppliers(opts?: Query) { return this.list<Entity>('', 'suppliers', opts); }
+  getSuppliers(opts?: Query) { return this.list('', 'suppliers', opts); }
   getSupplier(id: string) { return this.get<Entity>('', id); }
   createSupplier(supplier: Entity) { return this.save<Entity>('', supplier); }
   deleteSupplier(id: string) { return this.remove('', id); }
 }
 export class Taxes extends CollectionResource {
   baseURL = '/taxes';
-  getTaxes(opts?: Query) { return this.list<Entity>('', 'taxes', opts); }
+  getTaxes(opts?: Query) { return this.list('', 'taxes', opts); }
   getTax(id: string) { return this.get<Entity>('', id); }
   createTax(tax: Entity) { return this.save<Entity>('', tax); }
   deleteTax(id: string) { return this.remove('', id); }
 }
 export class Webhooks extends CollectionResource {
   baseURL = '/webhooks';
-  getWebhooks(opts?: Query) { return this.list<Entity>('', 'webhooks', opts); }
+  getWebhooks(opts?: Query) { return this.list('', 'webhooks', opts); }
   getWebhook(id: string) { return this.get<Entity>('', id); }
   createWebhook(webhook: Entity) { return this.save<Entity>('', webhook); }
 }
