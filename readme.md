@@ -74,12 +74,12 @@ The client exposes the following resource groups:
 | Stores | List, get |
 | Variants | List, get |
 | Customers | List, get, create/update, delete |
-| Discounts | List, get |
+| Discounts | List, get, create/update, delete |
 | Employees | List, get |
 | Merchant | Get merchant |
 | Modifiers | List, get, create/update, delete |
 | Payment types | List, get |
-| POS devices | List, get, update |
+| POS devices | List, get, create/update, delete |
 | Receipts | List, get, create, refund |
 | Shifts | List, get |
 | Suppliers | List, get, create/update, delete |

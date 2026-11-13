@@ -31,11 +31,14 @@ export class Customers extends CollectionResource {
   getCustomers(opts?: Query) { return this.list('', 'customers', opts); }
   getCustomer(id: string) { return this.get<Entity>('', id); }
   createCustomer(customer: Entity) { return this.save<Entity>('', customer); }
+  deleteCustomer(id: string) { return this.remove('', id); }
 }
 export class Discounts extends CollectionResource {
   baseURL = '/discounts';
   getDiscounts(opts?: Query) { return this.list<Entity>('', 'discounts', opts); }
   getDiscount(id: string) { return this.get<Entity>('', id); }
+  createDiscount(discount: Entity) { return this.save<Entity>('', discount); }
+  deleteDiscount(id: string) { return this.remove('', id); }
 }
 export class Employees extends CollectionResource {
   baseURL = '/employees';
@@ -63,6 +66,7 @@ export class POSDevices extends CollectionResource {
   getPOSDevices(opts?: Query) { return this.list<Entity>('', 'pos_devices', opts); }
   getPOSDevice(id: string) { return this.get<Entity>('', id); }
   updatePOSDevice(device: Entity) { return this.save<Entity>('', device); }
+  deletePOSDevice(id: string) { return this.remove('', id); }
 }
 export class Receipts extends CollectionResource {
   baseURL = '/receipts';
@@ -98,5 +102,4 @@ export class Webhooks extends CollectionResource {
   getWebhooks(opts?: Query) { return this.list<Entity>('', 'webhooks', opts); }
   getWebhook(id: string) { return this.get<Entity>('', id); }
   createWebhook(webhook: Entity) { return this.save<Entity>('', webhook); }
-  deleteWebhook(id: string) { return this.remove('', id); }
 }
