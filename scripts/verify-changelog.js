@@ -1,19 +1,33 @@
-const { spawnSync } = require('child_process');
+const fs = require('fs');
+const conventionalChangelog = require('conventional-changelog');
 
-const result = spawnSync(
-  process.platform === 'win32' ? 'npx.cmd' : 'npx',
-  ['--no-install', 'conventional-changelog', '-p', 'conventionalcommits', '-r', '0'],
-  { encoding: 'utf8' },
-);
+const header = '# Changelog\n\nAll notable changes to this project are documented here. Entries are generated from Conventional Commits.\n\n';
+const checkOnly = process.argv.includes('--check');
 
-if (result.status !== 0) {
-  process.stderr.write(result.stderr || 'Unable to generate the changelog from git history.\n');
-  process.exit(result.status || 1);
-}
+const chunks = [];
+const stream = conventionalChangelog({
+  preset: 'conventionalcommits',
+  releaseCount: 0,
+});
 
-if (!/^##?\s+\[?\d|^###\s+(Features|Bug Fixes|Performance Improvements)/m.test(result.stdout)) {
-  process.stderr.write('Changelog generation returned no release sections. Check Conventional Commit messages and tags.\n');
-  process.exit(1);
-}
+stream.on('data', (chunk) => chunks.push(Buffer.from(chunk)));
+stream.on('error', (error) => {
+  process.stderr.write(`Changelog generation failed: ${error.message}\n`);
+  process.exitCode = 1;
+});
+stream.on('end', () => {
+  const generated = Buffer.concat(chunks).toString('utf8');
+  if (!generated.trim()) {
+    process.stderr.write('Changelog generation produced no entries. Use Conventional Commit messages (feat:, fix:, etc.).\n');
+    process.exitCode = 1;
+    return;
+  }
 
-process.stdout.write('Conventional changelog generation verified.\n');
+  if (checkOnly) {
+    process.stdout.write('Conventional changelog generation verified.\n');
+    return;
+  }
+
+  fs.writeFileSync('CHANGELOG.md', header + generated);
+  process.stdout.write('CHANGELOG.md generated from git history.\n');
+});
