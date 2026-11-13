@@ -21,11 +21,12 @@ export default class Categories extends Resource {
    * @param {GetQueryParams} opts
    */
   async getCategories(opts?: GetQueryParams) {
-    if (opts?.categories_ids) {
-      opts.categories_ids = this.splitList(opts.categories_ids) as any;
+    const query = opts ? { ...opts } : undefined;
+    if (query?.categories_ids) {
+      query.categories_ids = this.splitList(query.categories_ids) as any;
     }
     const res = await this.httpClient.get<WithCursor<{ categories: Category[] }>>(
-      this.params(this.getURL(), opts),
+      this.params(this.getURL(), query),
     );
     return res.body;
   }

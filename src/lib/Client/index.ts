@@ -128,7 +128,8 @@ export class Client<T extends Authenticators> {
   }
 
   #initResource = (R: ResourceConstructor) => {
-    (this as any)[R.name.toLowerCase()] = new R({ _httpClient: this._httpClient, auth: this.auth });
+    const name = R.name === 'PaymentTypes' ? 'paymentTypes' : R.name === 'POSDevices' ? 'posDevices' : R.name.toLowerCase();
+    (this as any)[name] = new R({ _httpClient: this._httpClient, auth: this.auth });
   };
 
   debug(newVal?: boolean) {
@@ -148,8 +149,8 @@ export class Client<T extends Authenticators> {
   employees: Employees;
   merchant: Merchant;
   modifiers: Modifiers;
-  paymenttypes: PaymentTypes;
-  posdevices: POSDevices;
+  paymentTypes: PaymentTypes;
+  posDevices: POSDevices;
   receipts: Receipts;
   shifts: Shifts;
   suppliers: Suppliers;

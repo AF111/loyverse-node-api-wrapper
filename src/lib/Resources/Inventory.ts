@@ -12,16 +12,17 @@ export default class Inventory extends Resource {
    * @param {GetQueryParams} opts
    */
   async getInventory(opts: GetQueryParams = {}) {
-    if (opts.store_ids) {
-      opts.store_ids = this.splitList(opts.store_ids) as any;
+    const query = { ...opts };
+    if (query.store_ids) {
+      query.store_ids = this.splitList(query.store_ids) as any;
     }
 
-    if (opts.variant_ids) {
-      opts.variant_ids = this.splitList(opts.variant_ids) as any;
+    if (query.variant_ids) {
+      query.variant_ids = this.splitList(query.variant_ids) as any;
     }
 
     const res = await this.httpClient.get<WithCursor<{ inventory_levels: InventoryLevel[] }>>(
-      this.params(this.getURL(), opts),
+      this.params(this.getURL(), query),
     );
     return res.body;
   }

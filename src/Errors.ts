@@ -40,7 +40,7 @@ export enum LoyverseErrorCode {
      * @description The subscription of account has lapsed
 
      */
-  PAYMENT_REQUIRED = 40,
+  PAYMENT_REQUIRED = 402,
   /**
      * @description The resource requested is not available with your permissions
 

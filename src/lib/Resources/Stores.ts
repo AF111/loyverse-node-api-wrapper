@@ -21,10 +21,11 @@ export default class Stores extends Resource {
    * @param {GetQueryParams} opts
    */
   async getStores(opts?: GetQueryParams) {
-    if (opts && opts.store_ids) {
-      opts.store_ids = this.splitList(opts.store_ids) as any;
+    const query = opts ? { ...opts } : undefined;
+    if (query && query.store_ids) {
+      query.store_ids = this.splitList(query.store_ids) as any;
     }
-    const res = await this.httpClient.get<WithCursor<{ stores: Store[] }>>(this.params(this.getURL(), opts));
+    const res = await this.httpClient.get<WithCursor<{ stores: Store[] }>>(this.params(this.getURL(), query));
     return res.body;
   }
 }

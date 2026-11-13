@@ -24,11 +24,12 @@ export default class Items extends Resource {
    * @param {GetQueryParams} opts
    */
   async getItems(opts?: GetQueryParams) {
-    if (opts && opts.items_ids) {
+    const query = opts ? { ...opts } : undefined;
+    if (query && query.items_ids) {
       // join filtered item ids as expected by endpoint
-      opts.items_ids = this.splitList(opts.items_ids) as any;
+      query.items_ids = this.splitList(query.items_ids) as any;
     }
-    const res = await this.httpClient.get<WithCursor<{ items: Item[] }>>(this.params(this.getURL(), opts));
+    const res = await this.httpClient.get<WithCursor<{ items: Item[] }>>(this.params(this.getURL(), query));
     return res.body;
   }
 
@@ -94,7 +95,7 @@ export default class Items extends Resource {
     }
 
     const pipeline = promisify(stream.pipeline);
-    return pipeline(this.httpClient.stream(this.getURL(itemID, 'image'), { method: 'POST' }), writeStream);
+    return pipeline(this.httpClient.stream(this.getURL(itemID, 'image'), { method: 'GET' }), writeStream);
   }
 
   /**
