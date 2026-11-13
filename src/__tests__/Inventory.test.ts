@@ -6,6 +6,6 @@ describe('inventory request payload', () => {
     const resource = new Inventory({ _httpClient: http, auth: {} } as any);
     const changes = [{ variant_id: 'v-1', store_id: 's-1', stock_after: 12 }];
     await resource.updateInventoryLevels(changes);
-    expect(http.post).toHaveBeenCalledWith('/inventory', { json: { inventory_levels: changes } });
+    expect(http.post).toHaveBeenCalledWith('inventory', { json: { inventory_levels: changes } });
   });
 });
