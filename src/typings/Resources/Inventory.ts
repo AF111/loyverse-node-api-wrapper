@@ -19,6 +19,6 @@ export type GetQueryParams = Pick<PaginationParams, 'updated_at_min' | 'updated_
   variant_ids?: string[];
 };
 
-export interface UpdateInventoryLevel extends Exclude<InventoryLevel, 'in_stock' | 'updated_at'> {
+export type UpdateInventoryLevel = Omit<InventoryLevel, 'in_stock' | 'updated_at'> & {
   stock_after: number;
-}
+};

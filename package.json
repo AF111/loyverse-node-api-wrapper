@@ -1,7 +1,7 @@
 {
   "name": "loyverse-api-wrapper",
   "version": "1.0.4",
-  "description": "app.js",
+  "description": "TypeScript Node.js client for the Loyverse REST API",
   "files": [
     "dist/**/*"
   ],
@@ -10,11 +10,13 @@
   "scripts": {
     "build": "tsc",
     "watch": "tsc --watch",
-    "version": "git add -A",
+    "version": "npm run changelog && git add CHANGELOG.md",
     "prepare": "npm run build",
-    "prepublish": "npm run test && npm run build",
-    "postversion": "git push origin main && git push origin main --tags",
-    "test": "jest"
+    "test": "jest",
+    "prepublishOnly": "npm test -- --runInBand && npm run build",
+    "changelog": "node scripts/generate-changelog.js",
+    "changelog:all": "node scripts/generate-changelog.js",
+    "changelog:verify": "node scripts/generate-changelog.js --check"
   },
   "keywords": [
     "loyverse",
@@ -42,7 +44,7 @@
       "<rootDir>/src/Errors.ts"
     ],
     "testMatch": [
-      "**/*.test.(ts)"
+      "**/*.test.ts"
     ],
     "verbose": false
   },
@@ -54,25 +56,31 @@
   "license": "MIT",
   "dependencies": {
     "got": "^11.5.2",
-    "tslib": "^1.14.1"
+    "tslib": "^2.8.1"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.12.16",
     "@babel/preset-typescript": "^7.12.16",
     "@types/jest": "^26.0.20",
-    "@typescript-eslint/eslint-plugin": "^4.15.1",
-    "@typescript-eslint/parser": "^4.15.1",
+    "@typescript-eslint/eslint-plugin": "^8.18.0",
+    "@typescript-eslint/parser": "^8.18.0",
     "cookie-parser": "^1.4.5",
     "dotenv": "^8.2.0",
     "ejs": "^3.1.5",
-    "eslint": "^7.20.0",
-    "eslint-config-airbnb-base": "^14.2.1",
-    "eslint-plugin-import": "^2.22.1",
+    "eslint": "^8.57.1",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.31.0",
     "express": "^4.17.1",
     "jest": "^26.6.3",
     "lowdb": "^1.0.0",
     "morgan": "^1.10.0",
     "parcel": "^2.0.0-beta.1",
-    "typescript": "^4.0.2"
+    "typescript": "^5.7.3",
+    "@types/node": "^22.15.30",
+    "conventional-changelog-conventionalcommits": "^8.0.0",
+    "conventional-changelog": "^6.0.0"
+  },
+  "engines": {
+    "node": ">=18"
   }
 }

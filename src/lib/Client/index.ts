@@ -11,6 +11,19 @@ import Items from '../Resources/Items';
 import Stores from '../Resources/Stores';
 import Categories from '../Resources/Categories';
 import Inventory from '../Resources/Inventory';
+import Variants from '../Resources/Variants';
+import Customers from '../Resources/Customers';
+import Discounts from '../Resources/Discounts';
+import Employees from '../Resources/Employees';
+import Merchant from '../Resources/Merchant';
+import Modifiers from '../Resources/Modifiers';
+import PaymentTypes from '../Resources/PaymentTypes';
+import POSDevices from '../Resources/POSDevices';
+import Receipts from '../Resources/Receipts';
+import Shifts from '../Resources/Shifts';
+import Suppliers from '../Resources/Suppliers';
+import Taxes from '../Resources/Taxes';
+import Webhooks from '../Resources/Webhooks';
 
 export interface IClientResource {
   auth: IOAuth2 | IPersonalAccessTokenAuth;
@@ -68,7 +81,7 @@ export class Client<T extends Authenticators> {
         ],
         afterResponse: [
           async (res, retryWithMergedOptions) => {
-            // Referesh access token if expired;
+            // Refresh an expired OAuth token once. A still-valid token receiving 401 is not blindly retried.
             if (res.statusCode === 401) {
               if (this.auth instanceof PersonalAccessTokenAuth) {
                 throw new Error(
@@ -77,7 +90,13 @@ export class Client<T extends Authenticators> {
               }
 
               const auth = this.auth as IOAuth2;
-              let accessToken = auth.getAccessToken();
+              const accessToken = auth.getAccessToken();
+              if (!auth.hasTokenExpired(accessToken)) {
+                throw new Error('Loyverse rejected the OAuth access token. Verify its validity and granted scopes.');
+              }
+              if (!accessToken.refresh_token) {
+                throw new Error('The OAuth access token has expired and no refresh token is available.');
+              }
 
               const opts = {
                 headers: {
@@ -85,11 +104,9 @@ export class Client<T extends Authenticators> {
                 },
               };
 
-              if (auth.hasTokenExpired(accessToken)) {
-                accessToken = await auth.refreshAccessToken(accessToken.refresh_token);
-              }
+              const refreshedToken = await auth.refreshAccessToken(accessToken.refresh_token);
 
-              opts.headers.Authorization = `Bearer ${accessToken.access_token}`;
+              opts.headers.Authorization = `Bearer ${refreshedToken.access_token}`;
 
               // Save for further requests
               this._httpClient.defaults.options = Got.mergeOptions(this._httpClient.defaults.options, opts);
@@ -120,10 +137,14 @@ export class Client<T extends Authenticators> {
     init(Stores);
     init(Inventory);
     init(Categories);
+    init(Variants);
+    init(Customers); init(Discounts); init(Employees); init(Merchant); init(Modifiers);
+    init(PaymentTypes); init(POSDevices); init(Receipts); init(Shifts); init(Suppliers); init(Taxes); init(Webhooks);
   }
 
   #initResource = (R: ResourceConstructor) => {
-    (this as any)[R.name.toLowerCase()] = new R({ _httpClient: this._httpClient, auth: this.auth });
+    const name = R.name === 'PaymentTypes' ? 'paymentTypes' : R.name === 'POSDevices' ? 'posDevices' : R.name.toLowerCase();
+    (this as any)[name] = new R({ _httpClient: this._httpClient, auth: this.auth });
   };
 
   debug(newVal?: boolean) {
@@ -137,4 +158,17 @@ export class Client<T extends Authenticators> {
   stores: Stores;
   inventory: Inventory;
   categories: Categories;
+  variants: Variants;
+  customers: Customers;
+  discounts: Discounts;
+  employees: Employees;
+  merchant: Merchant;
+  modifiers: Modifiers;
+  paymentTypes: PaymentTypes;
+  posDevices: POSDevices;
+  receipts: Receipts;
+  shifts: Shifts;
+  suppliers: Suppliers;
+  taxes: Taxes;
+  webhooks: Webhooks;
 }

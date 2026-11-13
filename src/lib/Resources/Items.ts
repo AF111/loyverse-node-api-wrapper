@@ -14,7 +14,7 @@ export default class Items extends Resource {
    * @param itemID
    */
   async getItem(itemID: string) {
-    const res = await this.httpClient.get<Item>(this.getURL(itemID));
+    const res = await this.httpClient.get<Item>(this.getURL(encodeURIComponent(itemID)));
     return res.body;
   }
 
@@ -24,11 +24,12 @@ export default class Items extends Resource {
    * @param {GetQueryParams} opts
    */
   async getItems(opts?: GetQueryParams) {
-    if (opts && opts.items_ids) {
+    const query = opts ? { ...opts } : undefined;
+    if (query && query.items_ids) {
       // join filtered item ids as expected by endpoint
-      opts.items_ids = this.splitList(opts.items_ids) as any;
+      query.items_ids = this.splitList(query.items_ids) as any;
     }
-    const res = await this.httpClient.get<WithCursor<{ items: Item[] }>>(this.params(this.getURL(), opts));
+    const res = await this.httpClient.get<WithCursor<{ items: Item[] }>>(this.params(this.getURL(), query));
     return res.body;
   }
 
@@ -56,7 +57,7 @@ export default class Items extends Resource {
 
   /**
    * @description Upload Item Image
-   * @see https://developer.loyverse.com/docs/#tag/Items/paths/~1items~1{item_id}~1image/post
+   * @see https://developer.loyverse.com/docs/#tag/Items/paths/~1items~1{item_id}~1image/get
    * @param itemID
    * @param imagePathOrStream absolute path to the image or a readable file stream
    */
@@ -74,7 +75,7 @@ export default class Items extends Resource {
     // For POST, PUT, PATCH, and DELETE methods, `got.stream` returns a `stream.Writable`.
     await pipeline(
       readStream,
-      this.httpClient.stream.post(this.getURL(itemID, 'image'), { headers: { 'Content-Type': 'image/png' } }),
+      this.httpClient.stream.post(this.getURL(encodeURIComponent(itemID), 'image'), { headers: { 'Content-Type': 'image/png' } }),
     );
   }
 
@@ -94,7 +95,7 @@ export default class Items extends Resource {
     }
 
     const pipeline = promisify(stream.pipeline);
-    return pipeline(this.httpClient.stream(this.getURL(itemID, 'image'), { method: 'POST' }), writeStream);
+    return pipeline(this.httpClient.stream(this.getURL(itemID, 'image'), { method: 'GET' }), writeStream);
   }
 
   /**

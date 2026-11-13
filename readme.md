@@ -1,180 +1,153 @@
 # Loyverse Node.js API Wrapper
 
-# Deprecated: Package no longer supported.
+[![CI](https://github.com/AF111/loyverse-node-api-wrapper/actions/workflows/ci.yml/badge.svg)](https://github.com/AF111/loyverse-node-api-wrapper/actions/workflows/ci.yml)
+[![npm version](https://img.shields.io/npm/v/loyverse-api-wrapper)](https://www.npmjs.com/package/loyverse-api-wrapper)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-🚧🚧🚧 **WARNING: Work in progress (WIP)** 🚧🚧🚧
+A TypeScript Node.js client for the [Loyverse REST API](https://developer.loyverse.com/docs/). It provides authentication helpers, a shared HTTP client, typed resource access and pagination-friendly responses.
 
-This is still WIP and not many of the API features are implemented yet.
+> API coverage follows the official Loyverse API. Availability of endpoints and fields is governed by your Loyverse account permissions and API scopes.
 
-The API resources are also not testsed.
+## Requirements
 
-| Resource      | implemented? | tests |
-| ------------- | ------------ | ----- |
-| Categories    | ✔️           | ❌    |
-| Customers     | ❌           | ❌    |
-| Discounts     | ❌           | ❌    |
-| Employees     | ❌           | ❌    |
-| Inventory     | ✔️           | ❌    |
-| Items         | ✔️           | ❌    |
-| Merchant      | ❌           | ❌    |
-| Modifiers     | ❌           | ❌    |
-| Payment types | ❌           | ❌    |
-| POS devices   | ❌           | ❌    |
-| Receipts      | ❌           | ❌    |
-| Shifts        | ❌           | ❌    |
-| Stores        | ✔️           | ❌    |
-| Suppliers     | ❌           | ❌    |
-| Taxes         | ❌           | ❌    |
-| Webhooks      | ❌           | ❌    |
-| Variants      | ❌           | ❌    |
+- Node.js 18 or newer
+- A Loyverse Personal Access Token or OAuth 2.0 application
 
-# Install
+## Installation
 
 ```bash
 npm install loyverse-api-wrapper
 ```
 
-# Authentication/Authorization
+## Quick start
 
-Loyverse supports two Authorization methods.
+```ts
+import { Client } from 'loyverse-api-wrapper';
 
-## 1. Personal Access tokens
-
----
-
-Enables you to create an access token that is unrestricted in scope to make authenticated requests against their API.
-
-> The token is unrestricted in scope.
-
-## 2. OAuth 2.0
-
----
-
-This follows the OAuth 2.0 Authorization Code Flow. There are helper methods to simplify the process.
-
-### Refresh tokens
-
-The client will automatically refresh the access token when it expires.
-
-# Examples
-
-### ES6 import syntax
-
-```js
-import { PersonalAccessTokenAuth, Client } from 'loyverse-api-wrapper';
+const client = new Client(process.env.LOYVERSE_ACCESS_TOKEN!);
+const { items = [] } = await client.items.getItems({ limit: 50 });
+console.log(items);
 ```
 
-### Authentication using Personal Access Tokens
+The constructor accepts either a token string or an authentication provider instance.
 
-Example explicitly instantiating the PersonalAccessTokenAuth Provider.
+## Authentication
 
-```js
-const { PersonalAccessTokenAuth, Client } = require('loyverse-api-wrapper"');
+### Personal access token
 
-const auth = new PersonalAccessTokenAuth('YOUR_ACCESS_TOKEN');
+```ts
+import { Client, PersonalAccessTokenAuth } from 'loyverse-api-wrapper';
+
+const auth = new PersonalAccessTokenAuth(process.env.LOYVERSE_ACCESS_TOKEN);
 const client = new Client(auth);
 ```
 
-Let the client instantiate the Auth provider
+### OAuth 2.0
 
-```js
-const { Client } = require('loyverse-api-wrapper"');
+```ts
+import { Client, OAuth2 } from 'loyverse-api-wrapper';
 
-// sets up the (PersonalAccessTokenAuth) authorization Provider
-const client = new Client('YOUR_ACCESS_TOKEN');
-```
-
----
-
-### Authentication/Authorization using OAuth 2.0
-
-For OAuth2.0 you must explicity instantiate the OAuth2 provider.
-
-```js
-const { OAuth2, Client } = require('loyverse-api-wrapper');
-
-const auth = new OAuth2(
-  {
-    clientID: 'YOUR_CLIENT_ID',
-    clientSecret: 'YOUR_CLIENT_SECRET',
-    loyverseAPIbaseURL: 'https://api.loyverse.com', // optional
-    redirectURL: 'https://www.yoursite.com/api/auth/redirects/loyverse',
-    scope: [OAuth2.Scope.ITEMS_READ, OAuth2.Scope.STORES_READ],
-  },
-  // you can also instantiate with an access token, (optional)
-  {
-    access_token: 'string',
-    expires_in: 'seconds(number)',
-    refresh_token: 'string',
-    token_type: 'Bearer',
-  },
-);
-
-// you may update credentials on the fly using auth.setCredentials
-// providing the options obj above
-// with required fields clientID, clientSecret, redirectURL and scope
-
-const client = new Client(auth);
-// At this point, client might not be ready to start interacting with
-// loyvers API as you might still need to authenticate the user through loyverse first
-```
-
-### Redirecting user to loyverse for authentication
-
-```js
-// this method generates the redirect url you need to send the user
-// to for authentication.
-// You may specificy a unique state value that you can validate
-// when the user gets redirected back to your site.
-
-// auth.getAuthURL('SomeUniqueState');
-auth.getAuthURL();
-```
-
-### Exchanging the authorization code for an access token
-
-```js
-// provide the authorization code sent back to your site
-// to exchange it for an access token
-// this method returns a promise
-// and resolves with the scoped access token if successful
-auth.authorize('authorization_code');
-
-// if you provided state to the auth.getAuthURL method
-// you might want to validate the state to make sure things are in order
-```
-
-### Setting the accessToken on the fly
-
-```js
-// with OAuth2.0 Provider
-auth.setAccessToken({
-  access_token: 'xaccess_token',
-  expires_in: 1,
-  scope: [],
-  refresh_token: 'refresh_token',
-  expires_at: 33,
-  token_type: 'bearer',
+const auth = new OAuth2({
+  clientID: process.env.LOYVERSE_CLIENT_ID!,
+  clientSecret: process.env.LOYVERSE_CLIENT_SECRET!,
+  redirectURL: 'https://example.com/oauth/loyverse/callback',
+  scope: [OAuth2.Scope.ITEMS_READ, OAuth2.Scope.STORES_READ],
 });
 
-// with PersonalAccessTokenAuth Provider
-// auth.setAccessToken('PersonalAccessToken');
+const authorizationUrl = auth.getAuthURL('csrf-state');
+// Redirect the merchant to authorizationUrl and validate state on callback.
+const token = await auth.authorize(authorizationCode);
+const client = new Client(auth);
 ```
 
----
+OAuth access-token refresh is handled by the client when the API responds with an authentication failure and a refresh token is available. Store tokens securely; never commit credentials.
 
-## Calling the API resources/Enpoints to get data
+## Resource coverage
 
-```js
-// client contains all available resources
-// client.items.getItem('itemID') // get single item
-// client.categories.getCategory('categoryID') // get single Category
+The client exposes the following resource groups:
+
+| Resource | Methods |
+| --- | --- |
+| Items | List, get, create, delete, upload/download/delete image |
+| Categories | List, get, create/update, delete |
+| Inventory | List levels, batch update levels |
+| Stores | List, get |
+| Variants | List, get |
+| Customers | List, get, create/update, delete |
+| Discounts | List, get, create/update, delete |
+| Employees | List, get |
+| Merchant | Get merchant |
+| Modifiers | List, get, create/update, delete |
+| Payment types | List, get |
+| POS devices | List, get, create/update, delete |
+| Receipts | List, get, create, refund |
+| Shifts | List, get |
+| Suppliers | List, get, create/update, delete |
+| Taxes | List, get, create/update, delete |
+| Webhooks | List, get, create |
+
+Some Loyverse endpoints are read-only or expose only the operations supported by the official API. Check the linked API reference for required scopes, payload schemas and endpoint constraints.
+
+## Pagination and filters
+
+List methods accept endpoint-specific filters and pagination options such as `limit` and `cursor`. Loyverse uses cursor-based pagination. Pass the returned cursor to the next request:
+
+```ts
+const firstPage = await client.items.getItems({ limit: 100 });
+if (firstPage.cursor) {
+  const nextPage = await client.items.getItems({ limit: 100, cursor: firstPage.cursor });
+}
 ```
 
-## Example using OAuth with Express JS
+Array filters are serialized as comma-separated IDs. Input option objects are not modified.
 
-Please have a look in this repo ./examples/express.js
+## Errors
 
-### API documentation: [Loyverse API documentation](https://developer.loyverse.com/docs/)
+Requests reject with the underlying Got HTTP errors for transport and HTTP failures. Loyverse API error payloads are represented by `LoyverseAPIError`, which exposes `errors` and `statusCode`.
 
-### For a full list of all available scopes see: [Loyverse OAuth 2.0](https://developer.loyverse.com/docs/#section/Authorization/OAuth-2.0)
+```ts
+import { LoyverseAPIError } from 'loyverse-api-wrapper';
+
+try {
+  await client.items.getItems();
+} catch (error) {
+  if (error instanceof LoyverseAPIError) {
+    console.error(error.statusCode, error.errors);
+  }
+  throw error;
+}
+```
+
+## Development
+
+```bash
+npm install
+npm test -- --runInBand
+npm run build
+```
+
+Tests use Jest and mock the HTTP client; they do not require live Loyverse credentials.
+
+### Changelog and versioning
+
+Use [Conventional Commits](https://www.conventionalcommits.org/) (for example, `feat:`, `fix:`, `docs:`, `test:`). Generate or update the changelog with:
+
+```bash
+npm run changelog
+```
+
+Update the package version using npm's SemVer commands (`npm version patch|minor|major`) when preparing a release. Changelog generation does not publish the package or create a GitHub release.
+
+### GitHub Actions
+
+- **CI** runs the build and test suite on Node.js 18, 20 and 22.
+- **npm Publish (manual)** is a manually dispatched workflow. It requires the explicit input `PUBLISH` and an `NPM_TOKEN` repository secret. It is not triggered by pushes, tags or releases and has not been run as part of this work.
+
+## API reference
+
+- [Loyverse API documentation](https://developer.loyverse.com/docs/)
+- [Loyverse OAuth 2.0 documentation](https://developer.loyverse.com/docs/#section/Authorization/OAuth-2.0)
+
+## License
+
+MIT

@@ -10,8 +10,8 @@ export default class Stores extends Resource {
    * @see https://developer.loyverse.com/docs/#tag/Stores/paths/~1stores~1{store_id}/get
    * @param {string} storeID
    */
-  async getStore(storeID: number) {
-    const res = await this.httpClient.get<Store>(this.getURL(storeID));
+  async getStore(storeID: string | number) {
+    const res = await this.httpClient.get<Store>(this.getURL(encodeURIComponent(String(storeID))));
     return res.body;
   }
 
@@ -21,10 +21,11 @@ export default class Stores extends Resource {
    * @param {GetQueryParams} opts
    */
   async getStores(opts?: GetQueryParams) {
-    if (opts && opts.store_ids) {
-      opts.store_ids = this.splitList(opts.store_ids) as any;
+    const query = opts ? { ...opts } : undefined;
+    if (query && query.store_ids) {
+      query.store_ids = this.splitList(query.store_ids) as any;
     }
-    const res = await this.httpClient.get<WithCursor<{ stores: Store[] }>>(this.params(this.getURL(), opts));
+    const res = await this.httpClient.get<WithCursor<{ stores: Store[] }>>(this.params(this.getURL(), query));
     return res.body;
   }
 }
