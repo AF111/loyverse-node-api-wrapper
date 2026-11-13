@@ -1,5 +1,5 @@
 import Resource from '../Resource';
-import { WithCursor } from '../../typings';
+import { WithCursor, DeleteObjectIDs } from '../../typings';
 
 export default class Variants extends Resource {
   baseURL = '/variants';
@@ -7,6 +7,14 @@ export default class Variants extends Resource {
     const query = { ...(opts ?? {}) };
     for (const key of Object.keys(query)) if (Array.isArray(query[key])) query[key] = query[key].join(',');
     const response = await this.httpClient.get<WithCursor<{ variants: Record<string, any>[] }>>(this.params(this.getURL(), query));
+    return response.body;
+  }
+  async createVariant(variant: Record<string, any>) {
+    const response = await this.httpClient.post<Record<string, any>>(this.getURL(), { json: variant });
+    return response.body;
+  }
+  async deleteVariant(id: string) {
+    const response = await this.httpClient.delete<DeleteObjectIDs>(this.getURL(encodeURIComponent(id)));
     return response.body;
   }
   async getVariant(id: string) {

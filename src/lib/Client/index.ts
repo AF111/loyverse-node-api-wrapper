@@ -70,7 +70,7 @@ export class Client<T extends Authenticators> {
         ],
         afterResponse: [
           async (res, retryWithMergedOptions) => {
-            // Referesh access token if expired;
+            // Refresh an expired OAuth token once. A still-valid token receiving 401 is not blindly retried.
             if (res.statusCode === 401) {
               if (this.auth instanceof PersonalAccessTokenAuth) {
                 throw new Error(
@@ -79,7 +79,13 @@ export class Client<T extends Authenticators> {
               }
 
               const auth = this.auth as IOAuth2;
-              let accessToken = auth.getAccessToken();
+              const accessToken = auth.getAccessToken();
+              if (!auth.hasTokenExpired(accessToken)) {
+                throw new Error('Loyverse rejected the OAuth access token. Verify its validity and granted scopes.');
+              }
+              if (!accessToken.refresh_token) {
+                throw new Error('The OAuth access token has expired and no refresh token is available.');
+              }
 
               const opts = {
                 headers: {
@@ -87,11 +93,9 @@ export class Client<T extends Authenticators> {
                 },
               };
 
-              if (auth.hasTokenExpired(accessToken)) {
-                accessToken = await auth.refreshAccessToken(accessToken.refresh_token);
-              }
+              const refreshedToken = await auth.refreshAccessToken(accessToken.refresh_token);
 
-              opts.headers.Authorization = `Bearer ${accessToken.access_token}`;
+              opts.headers.Authorization = `Bearer ${refreshedToken.access_token}`;
 
               // Save for further requests
               this._httpClient.defaults.options = Got.mergeOptions(this._httpClient.defaults.options, opts);
